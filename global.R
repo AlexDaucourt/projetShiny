@@ -1,3 +1,10 @@
+library(shiny)
+library(shinydashboard)
+library(ggplot2)
+library(DT)
+library(dplyr)
+library(tidyverse)
+
 vect_annee <- unique(prod_region$annee)
 vect_region <- unique(conso_region$nom_region)
 vect_departements <- unique(conso_departement$nom_departement)

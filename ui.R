@@ -39,7 +39,19 @@ ui <- dashboardPage(
       ),
 
       tabItem(tabName = "Détails",
-      h2("Détails"))
+        fluidRow(
+          box(dataTableOutput("dtprod"))
+        ),
+        fluidRow(
+          downloadLink('downloadData1', 'Download')
+        ),
+        fluidRow(
+          box(dataTableOutput("dtcons"))
+        ),
+        fluidRow(
+          downloadLink('downloadData2', 'Download')
+        )
+        )
     )
   )
 )
