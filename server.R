@@ -159,26 +159,26 @@ server <- function(input, output) {
       reg <- conso_region %>% filter(nom_region == input$inp_maille)
       cr <- unique(reg$code_region)
       conso_tot <- conso_region %>% filter(annee %in% input$inp_annee) %>% filter(code_region %in% cr)
-      tot <- sum(conso_tot$conso_tot, na.rm=TRUE)
+      tot <- sum(conso_tot$conso_tot, na.rm=TRUE)/1000
       valueBox(value = as.integer(tot),
-               subtitle = "Consommation totale sur la période pour la première maille")
+               subtitle = "Consommation totale sur la période pour la première maille en GWh")
     }
     else{
       if (input$inp_choix_maille == 'Départements'){
         dep <- conso_departement %>% filter(nom_departement == input$inp_maille)
         cd <- unique(dep$code_departement)
         conso_tot <- conso_departement %>% filter(annee %in% input$inp_annee) %>% filter(code_departement %in% cd)
-        tot <- sum(conso_tot$conso_tot, na.rm=TRUE)
+        tot <- sum(conso_tot$conso_tot, na.rm=TRUE)/1000
         valueBox(value = as.integer(tot),
-                 subtitle = "Consommation totale sur la période pour la première maille")
+                 subtitle = "Consommation totale sur la période pour la première maille en GWh")
       }
       else{
         com <- conso_commune %>% filter(nom_commune == input$inp_maille)
         cc <- unique(com$code_commune)
         conso_tot <- conso_commune %>% filter(annee %in% input$inp_annee) %>% filter(code_commune %in% cc)
-        tot <- sum(conso_tot$conso_tot, na.rm=TRUE)
+        tot <- sum(conso_tot$conso_tot, na.rm=TRUE)/1000
         valueBox(value = as.integer(tot),
-                 subtitle = "Consommation totale sur la période pour la première maille")
+                 subtitle = "Consommation totale sur la période pour la première maille en GWh")
       }
     }
   })
@@ -188,26 +188,26 @@ server <- function(input, output) {
       reg <- prod_region %>% filter(nom_region == input$inp_maille)
       cr <- unique(reg$code_region)
       prod_tot <- prod_region %>% filter(annee %in% input$inp_annee) %>% filter(code_region %in% cr)
-      tot <- sum(prod_tot$prod_tot, na.rm=TRUE)
+      tot <- sum(prod_tot$prod_tot, na.rm=TRUE)/1000
       valueBox(value = as.integer(tot),
-               subtitle = "Production totale sur la période pour la première maille")
+               subtitle = "Production totale sur la période pour la première maille en GWh")
     }
     else{
       if (input$inp_choix_maille == 'Départements'){
         dep <- prod_departement %>% filter(nom_departement == input$inp_maille)
         cd <- unique(dep$code_departement)
         prod_tot <- prod_departement %>% filter(annee %in% input$inp_annee) %>% filter(code_departement %in% cd)
-        tot <- sum(prod_tot$prod_tot, na.rm=TRUE)
+        tot <- sum(prod_tot$prod_tot, na.rm=TRUE)/1000
         valueBox(value = as.integer(tot),
-                 subtitle = "Production totale sur la période pour la première maille")
+                 subtitle = "Production totale sur la période pour la première maille en GWh")
       }
       else{
         com <- prod_commune %>% filter(nom_commune == input$inp_maille)
         cc <- unique(com$code_commune)
         prod_tot <- prod_commune %>% filter(annee %in% input$inp_annee) %>% filter(code_commune %in% cc)
-        tot <- sum(prod_tot$prod_tot, na.rm=TRUE)
+        tot <- sum(prod_tot$prod_tot, na.rm=TRUE)/1000
         valueBox(value = as.integer(tot),
-                 subtitle = "Production totale sur la période pour la première maille")
+                 subtitle = "Production totale sur la période pour la première maille en GWh")
       }
     }
   })
