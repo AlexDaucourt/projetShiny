@@ -7,11 +7,6 @@ library(DT)
 library(dplyr)
 library(tidyverse)
 
-vect_annee <- unique(prod_region$annee)
-vect_region <- unique(conso_region$nom_region)
-vect_departements <- unique(conso_departement$nom_departement)
-vect_commune <- unique(conso_commune$nom_commune)
-
 #On clean les données
 
 conso_commune <- read.csv('data/consommation-electrique-par-secteur-dactivite-commune.csv', sep=";", encoding = "UTF-8")
@@ -245,3 +240,10 @@ moy_commune2["code_commune"] <- moy_commune2$code_region * 20000
 moy_commune2["nom_commune"] <- paste("Moyenne",moy_commune2$nom_departement)
 
 conso_commune <- bind_rows(conso_commune, moy_commune2)
+
+write.csv(conso_commune, "data/consommation-electrique-par-secteur-dactivite-commune-propre.csv", row.names=FALSE, fileEncoding = "UTF-8")
+write.csv(conso_departement, "data/consommation-electrique-par-secteur-dactivite-departement-propre.csv", row.names=FALSE, fileEncoding = "UTF-8")
+write.csv(conso_region, "data/consommation-electrique-par-secteur-dactivite-region-propre.csv", row.names=FALSE, fileEncoding = "UTF-8")
+write.csv(prod_commune, "data/production-electrique-par-filiere-a-la-maille-commune-propre.csv", row.names=FALSE, fileEncoding = "UTF-8")
+write.csv(prod_departement, "data/production-electrique-par-filiere-a-la-maille-departement-propre.csv", row.names=FALSE, fileEncoding = "UTF-8")
+write.csv(prod_region, "data/production-electrique-par-filiere-a-la-maille-region-propre.csv", row.names=FALSE, fileEncoding = "UTF-8")
