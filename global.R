@@ -1,3 +1,13 @@
+library(dplyr)
+library(tidyverse)
+library(shiny)
+library(shinydashboard)
+library(ggplot2)
+library(DT)
+library(dplyr)
+library(tidyverse)
+library(roxygen2)
+
 conso_commune <- read.csv('data/consommation-electrique-par-secteur-dactivite-commune-propre.csv', sep=",", encoding = "UTF-8")
 conso_departement <- read.csv('data/consommation-electrique-par-secteur-dactivite-departement-propre.csv', sep=",", encoding = "UTF-8")
 conso_region <- read.csv('data/consommation-electrique-par-secteur-dactivite-region-propre.csv', sep=",", encoding = "UTF-8")

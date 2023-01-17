@@ -6,6 +6,7 @@ library(ggplot2)
 library(DT)
 library(dplyr)
 library(tidyverse)
+library(roxygen2)
 
 #On clean les données
 
@@ -121,44 +122,38 @@ conso_commune <- conso_commune %>% group_by(annee, code_commune, code_secteur) %
 
 moy <- prod_region %>% group_by(annee, type_prod) %>%
   summarise(prod_tot = mean(prod_tot, na.rm = TRUE),
-            .groups = 'drop') %>% mutate(code_region=if_else(2>1, 0, 1)) %>%
-                                  mutate(nom_region=if_else(2>1, "Moyenne France", ""))
+            .groups = 'drop') %>% mutate(code_region=0, nom_region="Moyenne France")
 
 prod_region <- bind_rows(prod_region, moy)
 
 moy <- prod_departement %>% group_by(annee, type_prod) %>%
   summarise(prod_tot = mean(prod_tot, na.rm = TRUE),
-            .groups = 'drop') %>% mutate(code_departement=if_else(2>1, 0, 1)) %>%
-  mutate(nom_departement=if_else(2>1, "Moyenne France", ""))
+            .groups = 'drop') %>% mutate(code_departement=0, nom_departement="Moyenne France")
 
 prod_departement <- bind_rows(prod_departement, moy)
 
 moy <- prod_commune %>% group_by(annee, type_prod) %>%
   summarise(prod_tot = mean(prod_tot, na.rm = TRUE),
-            .groups = 'drop') %>% mutate(code_commune=if_else(2>1, 0, 1)) %>%
-  mutate(nom_commune=if_else(2>1, "Moyenne France", ""))
+            .groups = 'drop') %>% mutate(code_commune=0, nom_commune="Moyenne France")
 
 prod_commune <- bind_rows(prod_commune, moy)
 
 
 moy <- conso_region %>% group_by(annee, code_secteur) %>%
   summarise(conso_tot = mean(conso_tot, na.rm = TRUE),
-            .groups = 'drop') %>% mutate(code_region=if_else(2>1, 0, 1)) %>%
-  mutate(nom_region=if_else(2>1, "Moyenne France", ""))
+            .groups = 'drop') %>% mutate(code_region=0, nom_region="Moyenne France")
 
 conso_region <- bind_rows(conso_region, moy)
 
 moy <- conso_departement %>% group_by(annee, code_secteur) %>%
   summarise(conso_tot = mean(conso_tot, na.rm = TRUE),
-            .groups = 'drop') %>% mutate(code_departement=if_else(2>1, 0, 1)) %>%
-  mutate(nom_departement=if_else(2>1, "Moyenne France", ""))
+            .groups = 'drop') %>% mutate(code_departement=0, nom_departement="Moyenne France")
 
 conso_departement <- bind_rows(conso_departement, moy)
 
 moy <- conso_commune %>% group_by(annee, code_secteur) %>%
   summarise(conso_tot = mean(conso_tot, na.rm = TRUE),
-            .groups = 'drop') %>% mutate(code_commune=if_else(2>1, 0, 1)) %>%
-  mutate(nom_commune=if_else(2>1, "Moyenne France", ""))
+            .groups = 'drop') %>% mutate(code_commune=0, nom_commune="Moyenne France")
 
 conso_commune <- bind_rows(conso_commune, moy)
 
@@ -240,6 +235,8 @@ moy_commune2["code_commune"] <- moy_commune2$code_region * 20000
 moy_commune2["nom_commune"] <- paste("Moyenne",moy_commune2$nom_departement)
 
 conso_commune <- bind_rows(conso_commune, moy_commune2)
+
+# On exporte nos .csv clean
 
 write.csv(conso_commune, "data/consommation-electrique-par-secteur-dactivite-commune-propre.csv", row.names=FALSE, fileEncoding = "UTF-8")
 write.csv(conso_departement, "data/consommation-electrique-par-secteur-dactivite-departement-propre.csv", row.names=FALSE, fileEncoding = "UTF-8")

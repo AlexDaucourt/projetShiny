@@ -14,6 +14,8 @@ ui <- dashboardPage(
     ,
     uiOutput(outputId = "maille")
     ,
+    uiOutput(outputId = "maille_2")
+    ,
     uiOutput(outputId = "maille_comp")
     ,
     selectInput(

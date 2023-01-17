@@ -15,6 +15,22 @@ server <- function(input, output) {
                 selected = "Moyenne France")
   })
 
+  output$maille_2<- renderUI({
+    if(input$inp_choix_maille == 'Régions'){
+      vect_maille <- vect_region
+    }else if(input$inp_choix_maille == 'Départements'){
+      vect_maille <- vect_departements
+    }
+    else{
+      vect_maille <- vect_commune
+    }
+
+    selectInput(inputId = 'inp_maille_2',
+                label = 'Choisissez une autre maille',
+                choices = vect_maille,
+                selected = "Moyenne France")
+  })
+
   output$maille_comp<- renderUI({
     if(input$inp_choix_maille == 'Régions'){
       vect_maille <- vect_region
@@ -34,7 +50,7 @@ server <- function(input, output) {
   output$consommation = renderPlot({
     annee_sel <- input$inp_annee[1]
     if (input$inp_choix_maille == 'Régions'){
-      reg <- conso_region %>% filter(nom_region == input$inp_maille | nom_region == input$inp_maille_comp)
+      reg <- conso_region %>% filter(nom_region == input$inp_maille | nom_region == input$inp_maille_comp | nom_region == input$inp_maille_2)
       cr <- unique(reg$code_region)
       conso_a_plot <- conso_region %>% filter(annee == annee_sel) %>% filter(code_region %in% cr)
       ggplot(conso_a_plot) +
@@ -46,7 +62,7 @@ server <- function(input, output) {
     }
     else{
       if (input$inp_choix_maille == 'Départements'){
-        dep <- conso_departement %>% filter(nom_departement == input$inp_maille | nom_departement == input$inp_maille_comp)
+        dep <- conso_departement %>% filter(nom_departement == input$inp_maille | nom_departement == input$inp_maille_comp | nom_departement == input$inp_maille_2)
         cd <- unique(dep$code_departement)
         conso_a_plot <- conso_departement %>% filter(annee == annee_sel) %>% filter(code_departement %in% cd)
         ggplot(conso_a_plot) +
@@ -57,7 +73,7 @@ server <- function(input, output) {
           xlab("Département")
       }
       else{
-        com <- conso_commune %>% filter(nom_commune == input$inp_maille | nom_commune == input$inp_maille_comp)
+        com <- conso_commune %>% filter(nom_commune == input$inp_maille | nom_commune == input$inp_maille_comp | nom_commune == input$inp_maille_2)
         cc <- unique(com$code_commune)
         conso_a_plot <- conso_commune %>% filter(annee == annee_sel) %>% filter(code_commune %in% cc)
         ggplot(conso_a_plot) +
@@ -74,7 +90,7 @@ server <- function(input, output) {
   output$production = renderPlot({
     annee_sel <- input$inp_annee[1]
     if (input$inp_choix_maille == 'Régions'){
-      reg <- prod_region %>% filter(nom_region == input$inp_maille | nom_region == input$inp_maille_comp)
+      reg <- prod_region %>% filter(nom_region == input$inp_maille | nom_region == input$inp_maille_comp | nom_region == input$inp_maille_2)
       cr <- unique(reg$code_region)
       prod_a_plot <- prod_region %>% filter(annee == annee_sel) %>% filter(code_region %in% cr)
       ggplot(prod_a_plot) +
@@ -86,7 +102,7 @@ server <- function(input, output) {
     }
     else{
       if (input$inp_choix_maille == 'Départements'){
-        dep <- prod_departement %>% filter(nom_departement == input$inp_maille | nom_departement == input$inp_maille_comp)
+        dep <- prod_departement %>% filter(nom_departement == input$inp_maille | nom_departement == input$inp_maille_comp | nom_departement == input$inp_maille_2)
         cd <- unique(dep$code_departement)
         prod_a_plot <- prod_departement %>% filter(annee == annee_sel) %>% filter(code_departement %in% cd)
         ggplot(prod_a_plot) +
@@ -97,7 +113,7 @@ server <- function(input, output) {
           xlab("Département")
       }
       else{
-        com <- conso_commune %>% filter(nom_commune == input$inp_maille | nom_commune == input$inp_maille_comp)
+        com <- conso_commune %>% filter(nom_commune == input$inp_maille | nom_commune == input$inp_maille_comp | nom_commune == input$inp_maille_2)
         cc <- unique(com$code_commune)
         prod_a_plot <- prod_commune %>% filter(annee == annee_sel) %>% filter(code_commune %in% cc)
         ggplot(prod_a_plot) +
@@ -156,65 +172,65 @@ server <- function(input, output) {
 
   output$cons_tot <- renderValueBox({
     if (input$inp_choix_maille == 'Régions'){
-      reg <- conso_region %>% filter(nom_region == input$inp_maille)
+      reg <- conso_region %>% filter(nom_region == input$inp_maille | nom_region == input$inp_maille_2)
       cr <- unique(reg$code_region)
       conso_tot <- conso_region %>% filter(annee %in% input$inp_annee) %>% filter(code_region %in% cr)
       tot <- sum(conso_tot$conso_tot, na.rm=TRUE)/1000
       valueBox(value = as.integer(tot),
-               subtitle = "Consommation totale sur la période pour la première maille en GWh")
+               subtitle = "Consommation totale sur la période pour les premières mailles en GWh")
     }
     else{
       if (input$inp_choix_maille == 'Départements'){
-        dep <- conso_departement %>% filter(nom_departement == input$inp_maille)
+        dep <- conso_departement %>% filter(nom_departement == input$inp_maille | nom_departement == input$inp_maille_2)
         cd <- unique(dep$code_departement)
         conso_tot <- conso_departement %>% filter(annee %in% input$inp_annee) %>% filter(code_departement %in% cd)
         tot <- sum(conso_tot$conso_tot, na.rm=TRUE)/1000
         valueBox(value = as.integer(tot),
-                 subtitle = "Consommation totale sur la période pour la première maille en GWh")
+                 subtitle = "Consommation totale sur la période pour les premières mailles en GWh")
       }
       else{
-        com <- conso_commune %>% filter(nom_commune == input$inp_maille)
+        com <- conso_commune %>% filter(nom_commune == input$inp_maille | nom_commune == input$inp_maille_2)
         cc <- unique(com$code_commune)
         conso_tot <- conso_commune %>% filter(annee %in% input$inp_annee) %>% filter(code_commune %in% cc)
         tot <- sum(conso_tot$conso_tot, na.rm=TRUE)/1000
         valueBox(value = as.integer(tot),
-                 subtitle = "Consommation totale sur la période pour la première maille en GWh")
+                 subtitle = "Consommation totale sur la période pour les premières mailles en GWh")
       }
     }
   })
 
   output$prod_tot <- renderValueBox({
     if (input$inp_choix_maille == 'Régions'){
-      reg <- prod_region %>% filter(nom_region == input$inp_maille)
+      reg <- prod_region %>% filter(nom_region == input$inp_maille | nom_region == input$inp_maille_2)
       cr <- unique(reg$code_region)
       prod_tot <- prod_region %>% filter(annee %in% input$inp_annee) %>% filter(code_region %in% cr)
       tot <- sum(prod_tot$prod_tot, na.rm=TRUE)/1000
       valueBox(value = as.integer(tot),
-               subtitle = "Production totale sur la période pour la première maille en GWh")
+               subtitle = "Production totale sur la période pour les premières mailles en GWh")
     }
     else{
       if (input$inp_choix_maille == 'Départements'){
-        dep <- prod_departement %>% filter(nom_departement == input$inp_maille)
+        dep <- prod_departement %>% filter(nom_departement == input$inp_maille | nom_departement == input$inp_maille_2)
         cd <- unique(dep$code_departement)
         prod_tot <- prod_departement %>% filter(annee %in% input$inp_annee) %>% filter(code_departement %in% cd)
         tot <- sum(prod_tot$prod_tot, na.rm=TRUE)/1000
         valueBox(value = as.integer(tot),
-                 subtitle = "Production totale sur la période pour la première maille en GWh")
+                 subtitle = "Production totale sur la période pour les premières mailles en GWh")
       }
       else{
-        com <- prod_commune %>% filter(nom_commune == input$inp_maille)
+        com <- prod_commune %>% filter(nom_commune == input$inp_maille | nom_commune == input$inp_maille_2)
         cc <- unique(com$code_commune)
         prod_tot <- prod_commune %>% filter(annee %in% input$inp_annee) %>% filter(code_commune %in% cc)
         tot <- sum(prod_tot$prod_tot, na.rm=TRUE)/1000
         valueBox(value = as.integer(tot),
-                 subtitle = "Production totale sur la période pour la première maille en GWh")
+                 subtitle = "Production totale sur la période pour les premières mailles en GWh")
       }
     }
   })
 
   output$dtprod <- renderDataTable({
     if (input$inp_choix_maille == 'Régions'){
-      reg <- prod_region %>% filter(nom_region %in% input$inp_maille | nom_region %in% input$inp_maille_comp | nom_region == "Moyenne France")
+      reg <- prod_region %>% filter(nom_region %in% input$inp_maille | nom_region %in% input$inp_maille_comp | nom_region %in% input$inp_maille_2 | nom_region == "Moyenne France")
       cr <- unique(reg$code_region)
       prod_dt <- prod_region %>% filter(annee %in% input$inp_annee) %>% filter(code_region %in% cr)
       prod_dt <- prod_dt %>% group_by(type_prod, nom_region) %>%
@@ -227,7 +243,7 @@ server <- function(input, output) {
     }
     else{
       if (input$inp_choix_maille == 'Départements'){
-        dep <- prod_departement %>% filter(nom_departement == input$inp_maille | nom_departement %in% input$inp_maille_comp | nom_departement == "Moyenne France")
+        dep <- prod_departement %>% filter(nom_departement == input$inp_maille | nom_departement %in% input$inp_maille_comp | nom_departement %in% input$inp_maille_2 | nom_departement == "Moyenne France")
         cd <- unique(dep$code_departement)
         prod_dt <- prod_departement %>% filter(annee %in% input$inp_annee) %>% filter(code_departement %in% cd)
         prod_dt <- prod_dt %>% group_by(type_prod, nom_departement) %>%
@@ -239,7 +255,7 @@ server <- function(input, output) {
         prod_dt
       }
       else{
-        com <- prod_commune %>% filter(nom_commune == input$inp_maille | nom_commune %in% input$inp_maille_comp | nom_commune == "Moyenne France")
+        com <- prod_commune %>% filter(nom_commune == input$inp_maille | nom_commune %in% input$inp_maille_comp | nom_commune %in% input$inp_maille_2 | nom_commune == "Moyenne France")
         cc <- unique(com$code_commune)
         prod_dt <- prod_commune %>% filter(annee %in% input$inp_annee) %>% filter(code_commune %in% cc)
         prod_dt <- prod_dt %>% group_by(type_prod, nom_commune) %>%
@@ -259,7 +275,7 @@ server <- function(input, output) {
     },
     content = function(con){
       if (input$inp_choix_maille == 'Régions'){
-        reg <- prod_region %>% filter(nom_region %in% input$inp_maille | nom_region %in% input$inp_maille_comp | nom_region == "Moyenne France")
+        reg <- prod_region %>% filter(nom_region %in% input$inp_maille | nom_region %in% input$inp_maille_comp | nom_region %in% input$inp_maille_2 | nom_region == "Moyenne France")
         cr <- unique(reg$code_region)
         prod_dt <- prod_region %>% filter(annee %in% input$inp_annee) %>% filter(code_region %in% cr)
         prod_dt <- prod_dt %>% group_by(type_prod, nom_region) %>%
@@ -272,7 +288,7 @@ server <- function(input, output) {
       }
       else{
         if (input$inp_choix_maille == 'Départements'){
-          dep <- prod_departement %>% filter(nom_departement == input$inp_maille | nom_departement %in% input$inp_maille_comp | nom_departement == "Moyenne France")
+          dep <- prod_departement %>% filter(nom_departement == input$inp_maille | nom_departement %in% input$inp_maille_comp | nom_departement %in% input$inp_maille_2 | nom_departement == "Moyenne France")
           cd <- unique(dep$code_departement)
           prod_dt <- prod_departement %>% filter(annee %in% input$inp_annee) %>% filter(code_departement %in% cd)
           prod_dt <- prod_dt %>% group_by(type_prod, nom_departement) %>%
@@ -284,7 +300,7 @@ server <- function(input, output) {
           prod_dt
         }
         else{
-          com <- prod_commune %>% filter(nom_commune == input$inp_maille | nom_commune %in% input$inp_maille_comp | nom_commune == "Moyenne France")
+          com <- prod_commune %>% filter(nom_commune == input$inp_maille | nom_commune %in% input$inp_maille_comp | nom_commune %in% input$inp_maille_2 | nom_commune == "Moyenne France")
           cc <- unique(com$code_commune)
           prod_dt <- prod_commune %>% filter(annee %in% input$inp_annee) %>% filter(code_commune %in% cc)
           prod_dt <- prod_dt %>% group_by(type_prod, nom_commune) %>%
@@ -302,7 +318,7 @@ server <- function(input, output) {
 
   output$dtcons <- renderDataTable({
     if (input$inp_choix_maille == 'Régions'){
-      reg <- conso_region %>% filter(nom_region %in% input$inp_maille | nom_region %in% input$inp_maille_comp | nom_region == "Moyenne France")
+      reg <- conso_region %>% filter(nom_region %in% input$inp_maille | nom_region %in% input$inp_maille_comp | nom_region %in% input$inp_maille_2 | nom_region == "Moyenne France")
       cr <- unique(reg$code_region)
       conso_dt <- conso_region %>% filter(annee %in% input$inp_annee) %>% filter(code_region %in% cr)
       conso_dt <- conso_dt %>% group_by(code_secteur, nom_region) %>%
@@ -315,7 +331,7 @@ server <- function(input, output) {
     }
     else{
       if (input$inp_choix_maille == 'Départements'){
-        dep <- conso_departement %>% filter(nom_departement == input$inp_maille | nom_departement %in% input$inp_maille_comp | nom_departement == "Moyenne France")
+        dep <- conso_departement %>% filter(nom_departement == input$inp_maille | nom_departement %in% input$inp_maille_comp | nom_departement %in% input$inp_maille_2 | nom_departement == "Moyenne France")
         cd <- unique(dep$code_departement)
         conso_dt <- conso_departement %>% filter(annee %in% input$inp_annee) %>% filter(code_departement %in% cd)
         conso_dt <- conso_dt %>% group_by(code_secteur, nom_departement) %>%
@@ -327,7 +343,7 @@ server <- function(input, output) {
         conso_dt
       }
       else{
-        com <- conso_commune %>% filter(nom_commune == input$inp_maille | nom_commune %in% input$inp_maille_comp | nom_commune == "Moyenne France")
+        com <- conso_commune %>% filter(nom_commune == input$inp_maille | nom_commune %in% input$inp_maille_comp | nom_commune %in% input$inp_maille_2 | nom_commune == "Moyenne France")
         cc <- unique(com$code_commune)
         conso_dt <- conso_commune %>% filter(annee %in% input$inp_annee) %>% filter(code_commune %in% cc)
         conso_dt <- conso_dt %>% group_by(code_secteur, nom_commune) %>%
@@ -347,7 +363,7 @@ server <- function(input, output) {
     },
     content = function(con) {
       if (input$inp_choix_maille == 'Régions'){
-        reg <- conso_region %>% filter(nom_region %in% input$inp_maille | nom_region %in% input$inp_maille_comp | nom_region == "Moyenne France")
+        reg <- conso_region %>% filter(nom_region %in% input$inp_maille | nom_region %in% input$inp_maille_comp | nom_region %in% input$inp_maille_2 | nom_region == "Moyenne France")
         cr <- unique(reg$code_region)
         conso_dt <- conso_region %>% filter(annee %in% input$inp_annee) %>% filter(code_region %in% cr)
         conso_dt <- conso_dt %>% group_by(code_secteur, nom_region) %>%
@@ -360,7 +376,7 @@ server <- function(input, output) {
       }
       else{
         if (input$inp_choix_maille == 'Départements'){
-          dep <- conso_departement %>% filter(nom_departement == input$inp_maille | nom_departement %in% input$inp_maille_comp | nom_departement == "Moyenne France")
+          dep <- conso_departement %>% filter(nom_departement == input$inp_maille | nom_departement %in% input$inp_maille_comp | nom_departement %in% input$inp_maille_2 | nom_departement == "Moyenne France")
           cd <- unique(dep$code_departement)
           conso_dt <- conso_departement %>% filter(annee %in% input$inp_annee) %>% filter(code_departement %in% cd)
           conso_dt <- conso_dt %>% group_by(code_secteur, nom_departement) %>%
@@ -372,7 +388,7 @@ server <- function(input, output) {
           conso_dt
         }
         else{
-          com <- conso_commune %>% filter(nom_commune == input$inp_maille | nom_commune %in% input$inp_maille_comp | nom_commune == "Moyenne France")
+          com <- conso_commune %>% filter(nom_commune == input$inp_maille | nom_commune %in% input$inp_maille_comp | nom_commune %in% input$inp_maille_2 | nom_commune == "Moyenne France")
           cc <- unique(com$code_commune)
           conso_dt <- conso_commune %>% filter(annee %in% input$inp_annee) %>% filter(code_commune %in% cc)
           conso_dt <- conso_dt %>% group_by(code_secteur, nom_commune) %>%
